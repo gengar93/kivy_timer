@@ -1,0 +1,54 @@
+<TimerWidget>:
+    time_label: time_label
+    start_pause_button: start_pause_button
+
+    BoxLayout:
+        size: root.size
+        orientation: 'vertical'
+
+        BoxLayout:
+            size_hint: 1, 1
+
+            Label:
+                id: time_label
+                markup: True
+                font_size: 80
+                text: "[b]00:00[/b]"
+
+            BoxLayout:
+                width: 80
+                size_hint: None, 1
+                orientation: 'vertical'
+                spacing: 5
+                padding: 5
+
+                Button:
+                    text: "+10"
+                    on_press: root.add_time(5, 0, 0)
+
+                Button:
+                    text: "+1"
+                    on_press: root.add_time(0, 1, 0)
+
+                Button:
+                    text: "-1"
+                    on_press: root.add_time(0, -1, 0)
+
+                Button:
+                    text: "-10"
+                    on_press: root.add_time(0, -10, 0)
+
+        BoxLayout:
+            size_hint: 1, None
+            height: 60
+            spacing: 5
+            padding: 5
+
+            Button:
+                id: start_pause_button
+                text: "Start"
+                on_press: root.start_pause()
+
+            Button:
+                text: "Reset"
+                on_press: root.reset_timer()
