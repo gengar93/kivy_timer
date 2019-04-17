@@ -3,7 +3,7 @@ import time
 
 from kivy.app import App
 from kivy.clock import Clock
-from kivy.properties import ObjectProperty
+from kivy.properties import ObjectProperty, NumericProperty
 from kivy.uix.widget import Widget
 from win10toast import ToastNotifier
 
@@ -11,12 +11,12 @@ from win10toast import ToastNotifier
 class TimerWidget(Widget):
     time_label = ObjectProperty(None)
     start_pause_button = ObjectProperty(None)
+    seconds_left = NumericProperty(0)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.timer_event = None
-        self.seconds_left = 0  # TODO create a callback to update label if modified
-        self.total_time_elapsed = 0  # TODO DEBUG
+        self.bind(seconds_left=self.update_time_label)
 
     def reset_timer(self):
         if self.timer_event is not None:
@@ -24,7 +24,6 @@ class TimerWidget(Widget):
             self.timer_event = None
 
         self.seconds_left = 0
-        self.time_label.text = TimerWidget._format_time_text()
         self.start_pause_button.text = 'Start'
 
     def start_pause(self):
@@ -43,14 +42,11 @@ class TimerWidget(Widget):
     def add_time(self, seconds=0, minutes=0, hours=0):
         self.seconds_left += seconds + 60 * minutes + 3600 * hours
         self.seconds_left = max(self.seconds_left, 0)
-        self.time_label.text = TimerWidget._format_time_text(self.seconds_left)
 
     def _tick(self, interval=None):
         self.seconds_left -= interval
-        self.time_label.text = TimerWidget._format_time_text(self.seconds_left)
         if self.seconds_left < 0.05:
             self._notify_timer_done()
-
 
     def _notify_timer_done(self):
         self.reset_timer()
@@ -61,6 +57,9 @@ class TimerWidget(Widget):
                                        threaded=True)
 
         print("Timer done")
+
+    def update_time_label(self, widget_instance, new_seconds_left):
+        self.time_label.text = TimerWidget._format_time_text(new_seconds_left)
 
     @staticmethod
     def _format_time_text(seconds=0, minutes=0, hours=0):
