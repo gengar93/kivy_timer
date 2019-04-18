@@ -3,6 +3,7 @@ import time
 
 from kivy.app import App
 from kivy.clock import Clock
+from kivy.core.window import Window
 from kivy.properties import ObjectProperty, NumericProperty
 from kivy.uix.widget import Widget
 from win10toast import ToastNotifier
@@ -76,6 +77,7 @@ class TimerWidget(Widget):
 
 class TimerApp(App):
     def build(self):
+        Window.size = (550, 425)
         return TimerWidget()
 
 
